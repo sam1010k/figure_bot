@@ -1,0 +1,1 @@
+web: gunicorn figure_bot:app
