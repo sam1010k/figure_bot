@@ -1,1 +1,1 @@
-web: gunicorn figure_bot:app
+web: gunicorn figure_bot:app --workers 1
