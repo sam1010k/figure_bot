@@ -2,3 +2,4 @@ discord==1.7.3
 discord.py==1.7.3
 gunicorn==20.1.0
 boto==2.49.0
+python-dotenv==0.20.0

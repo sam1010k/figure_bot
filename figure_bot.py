@@ -2,9 +2,11 @@ import random
 import re
 import os
 import discord
-from boto.s3.connection import S3Connection
+import dotenv 
+from dotenv import load_dotenv
 
-TOKEN = S3Connection(os.environ['TOKEN'])
+load_dotenv()
+TOKEN = os.getenv('TOKEN')
 
 client = discord.Client()
 
