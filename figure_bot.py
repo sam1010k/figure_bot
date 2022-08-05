@@ -10,21 +10,7 @@ TOKEN = os.getenv('TOKEN')
 
 client = discord.Client()
 
-@client.event
-async def on_ready():
-    print('We have logged in as {0.user}'.format(client))
-
-@client.event
-async def on_message(message):
-
-    username = str(message.author).split('#')[0]
-    user_message = str(message.content)
-    channel_name = str(message.channel.name)
-    line_split = user_message.split("\n")
-    print(f'{username}: {user_message} {channel_name}')
-    print(line_split)
-
-    if 'https://figure.game' in line_split[0]:
+def process_figure_post(line_split):
         figure_game_url = line_split[0]
         figure_num = line_split[1]
         figure_trys = line_split[2]
@@ -41,14 +27,35 @@ async def on_message(message):
         figure_times = [int(s) for s in figure_time.split() if s.isdigit()]
         figure_minutes = figure_times[0]
         figure_seconds = figure_times[1]
-        response = (f'Great Job {username}!\n'
-        f'You did the {figure_number}th figure in {number_of_tries} trys.\n'
-        f'It only took you {figure_minutes} minutes and {figure_seconds} seconds!!!\n'
-        f'Super proud of you bud.')
+        return figure_number, number_of_tries, figure_minutes, figure_seconds
+
+def figure_say_good_job(username, figure_number, number_of_tries, figure_minutes, figure_seconds):
+    response = (f'Great Job {username}!\n'
+    f'You did the {figure_number}th figure in {number_of_tries} trys.\n'
+    f'It only took you {figure_minutes} minutes and {figure_seconds} seconds!!!\n'
+    f'Super proud of you bud.')
+    return response      
+
+@client.event
+async def on_ready():
+    print('We have logged in as {0.user}'.format(client))
+
+@client.event
+async def on_message(message):
+
+    username = str(message.author).split('#')[0]
+    user_message = str(message.content)
+    channel_name = str(message.channel.name)
+    line_split = user_message.split("\n")
+    print(f'{username}: {user_message} {channel_name}')
+    print(line_split)
+
+    if 'https://figure.game' in line_split[0]:
+        figure_number, number_of_tries, figure_minutes, figure_seconds = process_figure_post(line_split)
+        response = figure_say_good_job(username, figure_number, number_of_tries, figure_minutes, figure_seconds)
         await message.channel.send(response)
         return
 
-    
     if message.author == client.user:
         print(f'client user')
         return
