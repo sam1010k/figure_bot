@@ -16,13 +16,14 @@ def process_figure_post(line_split):
         figure_trys = line_split[2]
         figure_time = line_split[3]
 
-        figure_num_pattern = "Figure #(.*)"
-        mo = re.search(figure_num_pattern,figure_num)
-        figure_number = mo.group(1)
-
-        for s in figure_trys.split():
-            if s.isdigit():
-                number_of_tries = s
+        # figure_num_pattern = "Figure #(.*)"
+        # mo = re.search(figure_num_pattern,figure_num)
+        # figure_number = mo.group(1)
+        figure_number = [int(s) for s in figure_num.split() if s.isdigit()]
+        number_of_tries = [int(s) for s in figure_trys .split() if s.isdigit()]
+        # for s in figure_trys.split():
+        #     if s.isdigit():
+        #         number_of_tries = s
 
         figure_times = [int(s) for s in figure_time.split() if s.isdigit()]
         figure_minutes = figure_times[0]
@@ -48,8 +49,8 @@ async def on_message(message):
     channel_name = str(message.channel.name)
     line_split = user_message.split("\n")
     print(f'{username}: {user_message} {channel_name}')
-    print(line_split)
 
+    # Handle when a user submits their figure scores
     if 'https://figure.game' in line_split[0]:
         figure_number, number_of_tries, figure_minutes, figure_seconds = process_figure_post(line_split)
         response = figure_say_good_job(username, figure_number, number_of_tries, figure_minutes, figure_seconds)
